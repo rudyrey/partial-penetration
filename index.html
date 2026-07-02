@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partial Penetration Skin Explorer</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>Partial Penetration Skin Explorer</h1>
+  <p class="subtitle">Pseudoskin correlations &middot; productivity impact &middot; analytical life-of-well forecasting</p>
+  <nav id="tabs">
+    <button class="tab-btn active" data-tab="skin">Skin &amp; PI</button>
+    <button class="tab-btn" data-tab="low">Life of Well</button>
+    <button class="tab-btn" data-tab="theory">Theory &amp; References</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ============ TAB 1: SKIN & PI ============ -->
+  <section id="tab-skin" class="tab active">
+    <div class="layout">
+      <aside class="controls">
+        <div class="control-group">
+          <h3>Completion Geometry</h3>
+          <div id="geo-sliders"></div>
+          <div class="row">
+            <label for="placement">Interval placement</label>
+            <select id="placement">
+              <option value="top">Top of zone (or bottom)</option>
+              <option value="center" selected>Centered in zone</option>
+              <option value="custom">Custom elevation</option>
+            </select>
+          </div>
+          <div id="h1-slider"></div>
+          <div class="readout-strip" id="geo-readouts"></div>
+        </div>
+        <div class="control-group">
+          <h3>Reservoir Properties</h3>
+          <div id="res-sliders"></div>
+        </div>
+        <div class="control-group">
+          <h3>Productivity Inputs</h3>
+          <div id="pi-sliders"></div>
+        </div>
+      </aside>
+
+      <div class="results">
+        <div class="cards" id="skin-cards"></div>
+        <div class="panel">
+          <h3>Summary at Current Settings</h3>
+          <div class="table-wrap"><table id="summary-table"></table></div>
+        </div>
+        <div class="panel">
+          <h3>Pseudoskin vs Penetration Fraction</h3>
+          <div class="chart-box"><canvas id="chart-sp-vs-b"></canvas></div>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <h3>PI Ratio (J/J<sub>full</sub>) vs Penetration</h3>
+            <div class="chart-box"><canvas id="chart-pir-vs-b"></canvas></div>
+          </div>
+          <div class="panel">
+            <h3>Marginal PI Gain per Foot Drilled</h3>
+            <p class="panel-note">d(J/J<sub>full</sub>)/dh<sub>p</sub> &mdash; the PI added by one more foot of penetration.
+            Computed with the interval growing downward from the top of the zone (drilling-ahead scenario),
+            regardless of the placement setting.</p>
+            <div class="chart-box"><canvas id="chart-dpi-vs-b"></canvas></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Pseudoskin vs Anisotropy (k<sub>v</sub>/k<sub>h</sub>)</h3>
+          <div class="chart-box"><canvas id="chart-sp-vs-kvkh"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB 2: LIFE OF WELL ============ -->
+  <section id="tab-low" class="tab">
+    <div class="layout">
+      <aside class="controls">
+        <div class="control-group">
+          <h3>Forecast Model</h3>
+          <div class="row">
+            <label for="low-corr">Pseudoskin correlation</label>
+            <select id="low-corr"></select>
+          </div>
+          <div class="readout-strip" id="low-skin-readout"></div>
+        </div>
+        <div class="control-group">
+          <h3>Completion Geometry</h3>
+          <div id="low-geo-sliders"></div>
+          <div class="row">
+            <label for="low-placement">Interval placement</label>
+            <select id="low-placement">
+              <option value="top">Top of zone (or bottom)</option>
+              <option value="center" selected>Centered in zone</option>
+              <option value="custom">Custom elevation</option>
+            </select>
+          </div>
+          <div id="low-h1-slider"></div>
+        </div>
+        <div class="control-group">
+          <h3>Reservoir &amp; Fluid</h3>
+          <div id="low-res-sliders"></div>
+        </div>
+        <div class="control-group">
+          <h3>Pressures &amp; Limits</h3>
+          <div id="low-press-sliders"></div>
+        </div>
+        <p class="note">All inputs stay in sync with the Skin &amp; PI tab.</p>
+      </aside>
+
+      <div class="results">
+        <div class="cards" id="low-cards"></div>
+        <div class="panel">
+          <h3 class="panel-head">Production Rate vs Time
+            <span class="scale-toggle" id="rate-scale-toggle">
+              <button data-scale="log" class="active">log</button><button data-scale="linear">linear</button>
+            </span>
+          </h3>
+          <div class="chart-box tall"><canvas id="chart-rate"></canvas></div>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <h3>Cumulative Production vs Time</h3>
+            <div class="chart-box"><canvas id="chart-cum"></canvas></div>
+          </div>
+          <div class="panel">
+            <h3>EUR vs Penetration Fraction</h3>
+            <div class="chart-box"><canvas id="chart-eur-vs-b"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB 3: THEORY ============ -->
+  <section id="tab-theory" class="tab">
+    <div class="theory" id="theory-content"></div>
+  </section>
+</main>
+
+<footer>
+  <p>Analytical single-phase oil model, field units. For screening &amp; education &mdash; not a substitute for numerical simulation.</p>
+</footer>
+
+<script src="js/correlations.js"></script>
+<script src="js/lifeofwell.js"></script>
+<script src="js/theory.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
